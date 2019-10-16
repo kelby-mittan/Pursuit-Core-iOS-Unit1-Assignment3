@@ -25,19 +25,23 @@ func mathStuffFactory(opString: String) -> (Double, Double) -> Double {
   }
 }
 
+//func myFilter(inputArr: [Double], filter: (Double) -> Bool) -> [Double] {
+//    var filterResultArr = [Double]()
+//    for num in inputArr {
+//        filterResultArr.append(filter(num))
+//    }
+//    return filterResultArr
+//}
+
 func customMap(arr: [Double], closure: (Double) -> Double) -> [Double] {
-    var resultArr = [Double]()
-    
+    var mapResultArr = [Double]()
     for num in arr {
-        
-        resultArr.append(closure(num))
+        mapResultArr.append(closure(num))
     }
-    
-    return resultArr
+    return mapResultArr
 }
 
 var isCalculating = true
-
 repeat {
     print()
     print("Enter Equation")
@@ -45,7 +49,8 @@ repeat {
     let legitOperator = ["+", "-", "*", "/"]
     let randomOperator = legitOperator.randomElement()
 
-    let userEntry = readLine() ?? ""
+    let userEntryOpt = readLine() ?? ""
+    let userEntry = userEntryOpt.lowercased()
     //let containsChar = legitOperator.joined()
     var containsChar = " "
         if userEntry.contains("+") {
@@ -60,8 +65,9 @@ repeat {
             containsChar = "?"
         } else if userEntry.contains("*") {
             containsChar = "*"
-    }
-    
+        } else if userEntry.contains("filter") {
+            containsChar = "filter"
+        }
     switch containsChar {
     case "+":
         let plusArr = userEntry.split(separator: "+")
@@ -144,21 +150,53 @@ repeat {
         }
     case "map":
         let allElements = userEntry.components(separatedBy: " ")
-        let inputArr = allElements[1].split(separator: ",")
-        var numArrAsDouble = [Double]()
-        let byInt = Double(allElements[4])
-//        let userOperator = allElements[3]
-        for num in inputArr {
-            let dubnum = Double(num)
-            numArrAsDouble.append(dubnum!)
+        if allElements.count == 5 {
+            let inputArr = allElements[1].split(separator: ",")
+            var numArrAsDouble = [Double]()
+            let byInt = Double(allElements[4])
+    //        let userOperator = allElements[3]
+            for num in inputArr {
+                let dubnum = Double(num)
+                numArrAsDouble.append(dubnum!)
+            }
+            let mappedResult = customMap(arr: numArrAsDouble) { $0 * byInt!}
+            for num in mappedResult {
+                print(num, terminator: "   ")
+            }
+            print(customMap(arr: numArrAsDouble) { $0 * byInt!})
+        } else {
+            print("in order to use this function please enter like so \"map x,y,z,etc. by * n\"")
         }
-        
-        let mappedResult = customMap(arr: numArrAsDouble) { $0 * byInt!}
-        for num in mappedResult {
-            print(num, terminator: ", ")
+    case "filter":
+        let allElements = userEntry.components(separatedBy: " ")
+        if allElements.count == 4 {
+            let inputArr = allElements[1].split(separator: ",")
+            var numArrAsDouble = [Double]()
+            let byInt = Double(allElements[3])
+    //        let userOperator = allElements[3]
+            for num in inputArr {
+                let dubnum = Double(num)
+                numArrAsDouble.append(dubnum!)
+            }
+            if userEntry.contains("<=") {
+                print(numArrAsDouble.filter { $0 <= byInt! })
+            } else if userEntry.contains("<") {
+                print(numArrAsDouble.filter { $0 < byInt! })
+            } else if userEntry.contains(">=") {
+            print(numArrAsDouble.filter { $0 >= byInt! })
+            } else if userEntry.contains(">") {
+            print(numArrAsDouble.filter { $0 >= byInt! })
+            } else {
+                print("Error")
+            }
+        } else {
+            print("in order to use this function please enter like so.....")
+            print("1. \"Filter x,y,z,etc. < n\"")
+            print("2. \"Filter x,y,z,etc. <= n\"")
+            print("3. \"Filter x,y,z,etc. > n\"")
+            print("4. \"Filter x,y,z,etc. >= n\"")
         }
-        print()
-        print(customMap(arr: numArrAsDouble) { $0 * byInt!})
+    
     default:
         print("please enter equation")
     }
