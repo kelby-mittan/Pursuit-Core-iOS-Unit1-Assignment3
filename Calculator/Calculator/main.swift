@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 func mathStuffFactory(opString: String) -> (Double, Double) -> Double {
     
       switch opString {
@@ -53,12 +52,12 @@ repeat {
     let userEntry = userEntryOpt.lowercased()
     //let containsChar = legitOperator.joined()
     var containsChar = " "
-        if userEntry.contains("+") {
+        if userEntry.contains("map") {
+            containsChar = "map"
+        } else if userEntry.contains("+") {
             containsChar = "+"
         } else if userEntry.contains("-") {
             containsChar = "-"
-        } else if userEntry.contains("map") {
-            containsChar = "map"
         } else if userEntry.contains("/") {
             containsChar = "/"
         } else if userEntry.contains("?") {
@@ -82,7 +81,6 @@ repeat {
         } else {
             print("For addition... Please enter like so \"x+y\"!!!")
         }
-    print(plusArr)
     case "-":
         let minusArr = userEntry.split(separator: "-")
         let numOne = Double(minusArr[0])
@@ -132,13 +130,15 @@ repeat {
             let operation = mathStuffFactory(opString: randomOperator!)
             let result = operation(validNumOne, validNumTwo)
             print()
-            print("Answer: \(validNumOne) ? \(validNumTwo) = \(result)")
+            print("\(validNumOne) ? \(validNumTwo) = \(result)")
             print()
+            sleep(1)
             print("Guess what operator was used in this equation!!!")
             let guessOperator = readLine() ?? ""
             if guessOperator == randomOperator {
                 print()
                 print("nice job")
+                sleep(1)
                 isCalculating = false
             } else {
                 print("Oops, it was actually \(randomOperator!)")
@@ -153,19 +153,35 @@ repeat {
         if allElements.count == 5 {
             let inputArr = allElements[1].split(separator: ",")
             var numArrAsDouble = [Double]()
-            let byInt = Double(allElements[4])
+            let byDouble = Double(allElements[4])
     //        let userOperator = allElements[3]
             for num in inputArr {
                 let dubnum = Double(num)
-                numArrAsDouble.append(dubnum!)
+                if let validDubNum = dubnum {
+                    numArrAsDouble.append(validDubNum)
+                }
             }
-            let mappedResult = customMap(arr: numArrAsDouble) { $0 * byInt!}
-            for num in mappedResult {
-                print(num, terminator: "   ")
+            if let validDouble = byDouble {
+                if userEntry.contains("*") {
+                    let mappedResult = customMap(arr: numArrAsDouble) { $0 * validDouble}
+                    for num in mappedResult {
+                        print(num, terminator: " , ")
+                    }
+                } else if userEntry.contains("+") {
+                    let mappedResult = customMap(arr: numArrAsDouble) { $0 + validDouble}
+                    for num in mappedResult {
+                        print(num, terminator: " , ")
+                    }
+                }
+                isCalculating = false
+            } else {
+                print("error")
             }
-            print(customMap(arr: numArrAsDouble) { $0 * byInt!})
         } else {
-            print("in order to use this function please enter like so \"map x,y,z,etc. by * n\"")
+            print("in order to use this function please enter like so......")
+            print("e.g 1. \"map 1,2,3,4,5 by * 5\"")
+            print("e.g 1. \"map 1,2,3,4,5 by + 5\"")
+            isCalculating = true
         }
     case "filter":
         let allElements = userEntry.components(separatedBy: " ")
@@ -176,19 +192,25 @@ repeat {
     //        let userOperator = allElements[3]
             for num in inputArr {
                 let dubnum = Double(num)
-                numArrAsDouble.append(dubnum!)
+                if let validDubNum = dubnum {
+                    numArrAsDouble.append(validDubNum)
+                }
             }
-            if userEntry.contains("<=") {
-                print(numArrAsDouble.filter { $0 <= byInt! })
-            } else if userEntry.contains("<") {
-                print(numArrAsDouble.filter { $0 < byInt! })
-            } else if userEntry.contains(">=") {
-            print(numArrAsDouble.filter { $0 >= byInt! })
-            } else if userEntry.contains(">") {
-            print(numArrAsDouble.filter { $0 >= byInt! })
-            } else {
-                print("Error")
+            if let validDub = byInt {
+                if userEntry.contains("<=") {
+                    print(numArrAsDouble.filter { $0 <= validDub })
+                } else if userEntry.contains("<") {
+                    print(numArrAsDouble.filter { $0 < validDub })
+                } else if userEntry.contains(">=") {
+                print(numArrAsDouble.filter { $0 >= validDub })
+                } else if userEntry.contains(">") {
+                print(numArrAsDouble.filter { $0 >= validDub })
+                } else {
+                    print("Error")
+                }
+                isCalculating = false
             }
+            
         } else {
             print("in order to use this function please enter like so.....")
             print("1. \"Filter x,y,z,etc. < n\"")
@@ -198,20 +220,25 @@ repeat {
         }
     
     default:
-        print("please enter equation")
+        print("Please enter a valid equation")
     }
     print()
-    print("would you like to try another calculation")
+    print("Would you like to try another calculation?")
     let calcAgain = readLine() ?? ""
     if calcAgain.lowercased() == "yes" {
         isCalculating = true
     } else if calcAgain.lowercased() == "no" {
         isCalculating = false
-        print("thanks for calculating have a nice day")
+        sleep(1)
+        print("🆗✚👍＝🤯")
+        sleep(1)
+        print("Thanks for doing MATH with me!!!")
     } else {
         print("Please enter \"yes\" or \"no\"!!!")
     }
 } while isCalculating == true
+
+
 
 //func calculateOperation(str: String) -> Double {
 //   let userEntryArray = str.components(separatedBy: " ") // 2 + 2 => ["2", "+", "2"]
