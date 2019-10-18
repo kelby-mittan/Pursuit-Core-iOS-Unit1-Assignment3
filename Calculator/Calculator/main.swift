@@ -44,7 +44,7 @@ print()
 sleep(2)
 print("""
 For Basic Calculations.... enter like so:
-    e.g \"x + y\"!!!
+    For addition... \"x + y\"!!!
     For subtraction...  \"x - y\"!!!
     For multiplication... \"x * y\"!!!
     For division... \"x / y\"!!!
